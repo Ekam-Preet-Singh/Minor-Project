@@ -78,7 +78,6 @@ function SideDrawer() {
       };
 
       const { data } = await axios.get(`/api/user?search=${search}`, config);
-      // console.log(data);
 
       setLoading(false);
       setSearchResult(data);
@@ -143,7 +142,7 @@ function SideDrawer() {
           </Button>
         </Tooltip>
         <Text fontSize="2xl" fontFamily="Work sans">
-          Chat Novo
+          Chat App
         </Text>
         <div>
           <Menu>
@@ -208,11 +207,11 @@ function SideDrawer() {
             {loading ? (
               <ChatLoading />
             ) : (
-              searchResult?.map((u) => (
+              searchResult?.map((user) => (
                 <UserListItem
-                  key={u._id}
-                  user={u}
-                  handleFunction={() => accessChat(u._id)}
+                  key={user._id}
+                  user={user}
+                  handleFunction={() => accessChat(user._id)}
                 />
               ))
             )}

@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const Message = require("../models/messageModel");
 const User = require("../models/userModel");
 const Chat = require("../models/chatModel");
-const requestIp = require("request-ip");
 
 //@description     Get all Messages
 //@route           GET /api/Message/:chatId
@@ -24,9 +23,6 @@ const allMessages = asyncHandler(async (req, res) => {
 //@access          Protected
 const sendMessage = asyncHandler(async (req, res) => {
   const { content, chatId } = req.body;
-  const clientIp = requestIp.getClientIp(req);
-
-  // console.log(clientIp);
 
   if (!content || !chatId) {
     console.log("Invalid data passed into request");
@@ -49,23 +45,11 @@ const sendMessage = asyncHandler(async (req, res) => {
       select: "name pic email",
     });
 
-    Message.updateOne(
-      {
-        sender: req.user._id,
-      },
-      {
-        $set: {
-          IpAddress: clientIp.toString(),
-        },
-      }
-    );
-
     await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
 
     res.json(message);
   } catch (error) {
     res.status(400);
-    console.log(error);
     throw new Error(error.message);
   }
 });
